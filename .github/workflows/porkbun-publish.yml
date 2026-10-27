@@ -1,0 +1,50 @@
+name: Prepare K-Drama for Porkbun
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'kdrama/**'
+      - '.github/workflows/porkbun-publish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: porkbun-kdrama
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the latest source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Update the restaurant publishing branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          source_sha="$(git rev-parse HEAD)"
+          publish_tree="$(git rev-parse "${source_sha}:kdrama")"
+          test "$(git cat-file -t "${publish_tree}:index.html")" = blob
+          if git show-ref --verify --quiet refs/remotes/origin/porkbun-kdrama; then
+            publish_parent="$(git rev-parse refs/remotes/origin/porkbun-kdrama)"
+            if [ "$(git rev-parse "${publish_parent}^{tree}")" = "$publish_tree" ]; then
+              echo 'Restaurant publishing branch is already current.'
+              exit 0
+            fi
+            publish_commit="$(git commit-tree "$publish_tree" -p "$publish_parent" -m "Publish restaurant from $source_sha")"
+          else
+            publish_commit="$(git commit-tree "$publish_tree" -m "Publish restaurant from $source_sha")"
+          fi
+          git push origin "${publish_commit}:refs/heads/porkbun-kdrama"
+          echo "Prepared restaurant files from $source_sha for Porkbun."

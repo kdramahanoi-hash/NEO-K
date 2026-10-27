@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Drama Cafe & Beer | Hanoi's Seoul Connection</title>
+    <link rel="icon" type="image/png" href="assets/kdrama-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'k-red': {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            800: '#9f1239',
+                            900: '#881337', // Gochujang Red
+                        },
+                        'k-wood': {
+                            50: '#fbf7f3',
+                            100: '#f5efe6',
+                            800: '#5D4037', // Dark Walnut
+                            900: '#3E2723',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(-25%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-80px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(80px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .reveal-delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .reveal-delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        /* Review text truncation */
+        .review-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .review-text.expanded {
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+            display: block;
+        }
+
+        .view-more-btn {
+            color: #9f1239;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .view-more-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body class="bg-k-wood-50 text-stone-800 font-sans antialiased selection:bg-k-red-900 selection:text-white relative">
+
+    <!-- Subtle Grain Overlay -->
+    <div class="fixed inset-0 pointer-events-none z-50 bg-grain mix-blend-multiply"></div>
+
+    <!-- Navigation -->
+    <header
+        class="fixed top-0 w-full z-40 bg-k-wood-50/80 backdrop-blur-md border-b border-stone-200/60 transition-all duration-300">
+        <div class="max-w-screen-xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#"
+                class="font-serif text-xl tracking-tight text-k-red-900 flex items-center gap-2 font-bold shrink-0">
+                K-DRAMA <span
+                    class="hidden sm:inline text-xs font-sans font-normal text-stone-500 uppercase tracking-widest mt-1">Cafe
+                    & Beer</span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-8 text-sm tracking-wide text-stone-600 font-medium">
+                <a href="#story" class="hover:text-k-red-900 transition-colors">Our Story</a>
+                <a href="#day-menu" class="hover:text-k-red-900 transition-colors">Cafe (Day)</a>
+                <a href="#night-menu" class="hover:text-k-red-900 transition-colors">Beer (Night)</a>
+                <a href="#reviews" class="hover:text-k-red-900 transition-colors">Reviews</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <a href="#locations" title="Reserve Table"
+                    class="hidden min-[400px]:flex bg-k-red-900 text-stone-50 p-2.5 rounded-full hover:bg-k-red-800 transition-colors duration-300 shadow-sm items-center justify-center relative group">
+                    <span class="absolute top-0 right-0 flex h-2.5 w-2.5">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span
+                            class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-k-wood-50"></span>
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-calendar-check">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                        <path d="m9 16 2 2 4-4" />
+                    </svg>
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-stone-600 hover:text-k-red-900">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Side Menu Overlay -->
+        <div id="mobile-menu-overlay"
+            class="fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+        <!-- Mobile Side Menu -->
+        <div id="mobile-side-menu"
+            class="fixed top-0 right-0 h-full w-[280px] bg-k-wood-50 z-[60] translate-x-full transition-transform duration-300 ease-in-out shadow-2xl p-8">
+            <div class="flex justify-between items-center mb-12">
+                <span class="font-serif text-xl text-k-red-900 font-bold">K-DRAMA</span>
+                <button id="close-menu-btn" class="p-2 text-stone-500">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col gap-6 text-lg font-medium text-stone-800">
+                <a href="#story" class="hover:text-k-red-900 transition-colors">Our Story</a>
+                <a href="#day-menu" class="hover:text-k-red-900 transition-colors">Cafe (Day)</a>
+                <a href="#night-menu" class="hover:text-k-red-900 transition-colors">Beer (Night)</a>
+                <a href="#reviews" class="hover:text-k-red-900 transition-colors">Reviews</a>
+                <a href="#locations"
+                    class="mt-4 bg-k-red-900 text-white px-6 py-3 rounded-md text-center inline-block">Reserve Table</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-[100vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="assets/store-front-v2.jpg" alt="K-Drama Cafe Exterior"
+                class="w-full h-full object-cover filter brightness-50">
+        </div>
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+            <h1
+                class="font-display font-light text-5xl sm:text-6xl md:text-8xl text-white mb-8 tracking-tight leading-tight md:leading-none drop-shadow-2xl">
+                K-Drama <span class="italic font-serif text-k-red-400">Cafe & Beer</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-stone-200 font-light tracking-wide mb-10 max-w-2xl mx-auto">
+                From morning coffee to late-night seafood boil.<br>
+                <span class="text-white font-medium">Your new favorite episode begins here.</span>
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#menu"
+                    class="px-8 py-4 bg-k-red-700 hover:bg-k-red-600 text-white rounded-full font-medium transition-all hover:scale-105 shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                    View Menu
+                </a>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-24 px-6 bg-stone-50">
+        <div class="max-w-screen-xl mx-auto">
+            <!-- Menu Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+
+                <!-- Category: Cafe -->
+                <div class="space-y-6 reveal-left">
+                    <div class="relative h-64 rounded-xl overflow-hidden mb-6 group">
+                        <!-- Updated with real coffee image -->
+                        <img src="assets/real-coffee.png" alt="Korean Cafe"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                            <h3 class="text-white font-serif text-2xl">Cafe & Light Bites</h3>
+                        </div>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-baseline group cursor-pointer">
+                            <span class="text-stone-800 font-medium group-hover:text-k-red-700 transition-colors">Jeju
+                                Matcha Latte</span>
+                            <span class="text-stone-400 text-sm font-mono decoration-stone-300">55k</span>
+                        </li>
+                        <li class="flex justify-between items-baseline group cursor-pointer">
+                            <span class="text-stone-800 font-medium group-hover:text-k-red-700 transition-colors">Yuja
+                                (Citron) Tea</span>
+                            <span class="text-stone-400 text-sm font-mono decoration-stone-300">45k</span>
+                        </li>
+                        <li class="flex justify-between items-baseline group cursor-pointer">
+                            <span
+                                class="text-stone-800 font-medium group-hover:text-k-red-700 transition-colors">Dalgona
+                                Coffee</span>
+                            <span class="text-stone-400 text-sm font-mono decoration-stone-300">50k</span>
+                        </li>
+                        <li class="flex justify-between items-baseline group cursor-pointer">
+                            <span
+                                class="text-stone-800 font-medium group-hover:text-k-red-700 transition-colors">Classic
+                                Kimbap</span>
+                            <span class="text-stone-400 text-sm font-mono decoration-stone-300">45k</span>
+                        </li>
+                        <li class="flex justify-between items-baseline group cursor-pointer">
+                            <span
+                                class="text-stone-800 font-medium group-hover:text-k-red-700 transition-colors">Tteokbokki
+                                (Mild/Spicy)</span>
+                            <span class="text-stone-400 text-sm font-mono decoration-stone-300">60k</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category 2 -->
+                <div
+                    class="bg-stone-800/50 p-8 rounded-xl border border-stone-700/50 hover:border-k-red-900/50 transition-colors reveal reveal-delay-1">
+                    <h4 class="text-xl font-serif mb-6 text-k-red-100">Hot Pot (Jeongol)</h4>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Budae Jjigae (Army Stew)</span>
+                            <span class="text-stone-500 text-sm">350k</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Bulgogi Mushroom Pot</span>
+                            <span class="text-stone-500 text-sm">380k</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Kimchi Mandu (Dumpling)</span>
+                            <span class="text-stone-500 text-sm">320k</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Soft Tofu Stew (Sundubu)</span>
+                            <span class="text-stone-500 text-sm">150k</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category 3 -->
+                <div
+                    class="bg-stone-800/50 p-8 rounded-xl border border-stone-700/50 hover:border-k-red-900/50 transition-colors reveal-right reveal-delay-2">
+                    <h4 class="text-xl font-serif mb-6 text-k-red-100">K-Pub Bites</h4>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Corn Cheese</span>
+                            <span class="text-stone-500 text-sm">90k</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Steamed Egg (Gyeran Jjim)</span>
+                            <span class="text-stone-500 text-sm">80k</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Seafood Pancake (Haemul
+                                Pajeon)</span>
+                            <span class="text-stone-500 text-sm">150k</span>
+                        </li>
+                        <li class="flex justify-between border-b border-stone-700/50 pb-2">
+                            <span class="text-stone-300 text-sm">Spicy Chicken Feet</span>
+                            <span class="text-stone-500 text-sm">180k</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Reviews Import -->
+    <section id="reviews" class="py-24 px-6 bg-white overflow-hidden">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="flex flex-col items-center mb-12 reveal">
+                <div class="flex items-center gap-2 mb-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google"
+                        class="w-6 h-6">
+                    <span class="text-sm font-medium text-stone-500">Reviews Imported from
+                        Google</span>
+                </div>
+                <h2 class="font-serif text-3xl md:text-4xl tracking-tight text-stone-900 text-center">
+                    5.0 Excellent</h2>
+                <div class="flex gap-1 mt-4 items-center">
+                    <div class="flex">
+                        <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                    </div>
+                    <span class="ml-2 text-stone-600 font-medium">(30 Reviews)</span>
+                </div>
+            </div>
+
+            <!-- Customer Photos Carousel -->
+            <div class="mb-12 relative group">
+                <div class="flex overflow-x-auto gap-2 pb-4 no-scrollbar" id="photo-gallery">
+                    <img src="assets/real-feast.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/real-seafood-boil.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/real-sausages.png"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/real-coffee.png"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/store-front.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/store-waffle.png"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/store-seafood.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/store-fruit.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/store-driedfish.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/review-1.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/review-2.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                    <img src="assets/review-3.jpg"
+                        class="w-64 h-64 md:w-80 md:h-64 object-cover rounded-xl shrink-0 cursor-pointer shadow-sm hover:opacity-90 transition-opacity">
+                </div>
+            </div>
+
+            <!-- Reviews Carousel -->
+            <div class="relative">
+                <button
+                    class="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 md:-ml-8 z-10 bg-white shadow-lg rounded-full p-2 border border-stone-100 hover:bg-stone-50 transition-colors hidden md:block"
+                    onclick="scrollReviews('left')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevron-left w-6 h-6 text-stone-600">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+                <button
+                    class="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 md:-mr-8 z-10 bg-white shadow-lg rounded-full p-2 border border-stone-100 hover:bg-stone-50 transition-colors hidden md:block"
+                    onclick="scrollReviews('right')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevron-right w-6 h-6 text-stone-600">
+                        <path d="M9 18l6-6-6-6" />
+                    </svg>
+                </button>
+
+                <div class="flex overflow-x-auto gap-6 pb-8 no-scrollbar scroll-smooth" id="reviews-carousel">
+
+                    <!-- Review Card: Hiền Vũ (Detailed) -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                H</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Hiền Vũ</h4>
+                                <p class="text-[10px] text-stone-500">Local Guide • 2 weeks ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "I was so surprised when I came here; it was so cozy inside... The staff were enthusiastic
+                            and often gave me complimentary food... The female servers wore super cute ao dai... It's a
+                            place that left a deep impression on me 😊"
+                        </p>
+                        <div class="flex gap-2 mt-4 overflow-hidden rounded-md h-16 shrink-0">
+                            <img src="assets/store-front.jpg" class="w-1/3 object-cover">
+                            <img src="assets/review-1.jpg" class="w-1/3 object-cover">
+                            <img src="assets/review-2.jpg" class="w-1/3 object-cover">
+                        </div>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 2
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Mr. Wilson -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                M</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Mr. Wilson</h4>
+                                <p class="text-[10px] text-stone-500">Local Guide • 8 months ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "Best waffle in all of Hanoi! Awesome drinks, good prices."
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 5 • Owner Replied
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Min-young Lee -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                M</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Min-young Lee</h4>
+                                <p class="text-[10px] text-stone-500">1 review • a month ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "The unique concept creates a unique atmosphere. It seems like a lot of thought went into
+                            promoting Korean culture in Vietnam! The mango smoothie is also delicious. We had a great
+                            time with the family!"
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 2
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Baekbal Sonyeon -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                B</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">백발소년단정초신</h4>
+                                <p class="text-[10px] text-stone-500">1 review • 9 months ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "I chose Vietnamese coffee because of the title... it was a stroke of genius. The
+                            high-quality beans are satisfying. I think it will be popular not only with Korean tourists
+                            but also with young locals seeking out K-culture."
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 6
+                        </div>
+                    </div>
+
+                    <!-- Review Card: JaelanR Wilson -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                J</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">JaelanR Wilson</h4>
+                                <p class="text-[10px] text-stone-500">Local Guide • 6 months ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "Staff is amazing. The waffle is amazing. The smoothies are amazing. 10/10 cute place."
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 2
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Alfie -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                A</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Alfie</h4>
+                                <p class="text-[10px] text-stone-500">6 reviews • 6 months ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "Very good!! Delicious foods and nice staff"
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 3 • ₫1–100,000
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Song Sang-min -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                S</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">송상민</h4>
+                                <p class="text-[10px] text-stone-500">5 reviews • 3 months ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "It's unique and has a Korean Seongsu-dong feel. Each one is so kind."
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 2
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Huyen Tuong -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                H</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">후옌트엉</h4>
+                                <p class="text-[10px] text-stone-500">8 reviews • 5 months ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "Delicious drinks. ESPECIALLY the Mango smoothie. Quiet, chill space"
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 1
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Julie F. -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                J</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Julie F.</h4>
+                                <p class="text-[10px] text-stone-500">Local Guide • 8 months ago</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "The waffles are incredible"
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 4 • ₫1–100,000
+                        </div>
+                    </div>
+
+                    <!-- Review Card: Briget -->
+                    <div class="min-w-[300px] md:min-w-[350px] bg-stone-50 border border-stone-100 p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-stone-700 font-bold text-xs">
+                                B</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Briget “SupaStar”</h4>
+                                <p class="text-[10px] text-stone-500">2 days ago • New</p>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                                class="w-4 h-4 ml-auto opacity-50">
+                        </div>
+                        <div class="flex text-yellow-400 text-xs mb-3">★★★★★</div>
+                        <p class="text-sm text-stone-600 leading-relaxed italic review-text">
+                            "Perfect host and such a lovely place!!!"
+                        </p>
+                        <div class="mt-3 flex gap-2 text-[10px] text-stone-400">
+                            ❤️ 1
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center text-xs text-stone-400">
+                <a href="https://www.google.com/maps/place/K-Drama+coffe%26beer/@21.0194539,105.7849037,17z/data=!3m1!4b1!4m6!3m5!1s0x3135ab005c22f461:0x113c75d27db7e080!8m2!3d21.0194489!4d105.7874786!16s%2Fg%2F11x0tvjggr?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D"
+                    target="_blank" class="underline hover:text-stone-600">View all 30
+                    reviews on Google Maps</a>
+            </div>
+        </div>
+
+        <script>
+            function scrollReviews(direction) {
+                const container = document.getElementById('reviews-carousel');
+                const scrollAmount = 350;
+                if (direction === 'left') {
+                    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                } else {
+                    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            }
+
+            // Auto Scroll for Reviews and Photos - runs immediately
+            (function () {
+                const reviewsContainer = document.getElementById('reviews-carousel');
+                const photosContainer = document.getElementById('photo-gallery');
+
+                function startAutoScroll(container, speed) {
+                    if (!container) return;
+
+                    // Clone all children to create an infinite loop effect
+                    const originalContent = container.innerHTML;
+                    container.innerHTML += originalContent; // Duplicate once
+                    container.innerHTML += originalContent; // Duplicate twice for safety on large screens
+
+                    let scrollPos = 0;
+                    let intervalId;
+
+                    function scroll() {
+                        container.scrollLeft += 1;
+
+                        // If we've scrolled past the first set of original items, reset to skip the jump
+                        const halfWidth = container.scrollWidth / 3;
+                        if (container.scrollLeft >= halfWidth * 2) {
+                            container.scrollLeft -= halfWidth;
+                        }
+                    }
+
+                    function play() {
+                        clearInterval(intervalId);
+                        intervalId = setInterval(scroll, speed);
+                    }
+
+                    function pause() {
+                        clearInterval(intervalId);
+                    }
+
+                    play();
+                    container.addEventListener('mouseenter', pause);
+                    container.addEventListener('mouseleave', play);
+                    container.addEventListener('touchstart', pause);
+                    container.addEventListener('touchend', play);
+                }
+
+                startAutoScroll(reviewsContainer, 25); // Slightly slower for readability
+                startAutoScroll(photosContainer, 15);
+            })();
+
+            // View More functionality for review text
+            (function () {
+                const reviewTexts = document.querySelectorAll('.review-text');
+                reviewTexts.forEach(text => {
+                    // Check if text is truncated (content height > visible height)
+                    if (text.scrollHeight > text.clientHeight + 5) {
+                        const btn = document.createElement('span');
+                        btn.className = 'view-more-btn';
+                        btn.textContent = 'View more';
+                        btn.onclick = function () {
+                            if (text.classList.contains('expanded')) {
+                                text.classList.remove('expanded');
+                                btn.textContent = 'View more';
+                            } else {
+                                text.classList.add('expanded');
+                                btn.textContent = 'View less';
+                            }
+                        };
+                        text.parentNode.insertBefore(btn, text.nextSibling);
+                    }
+                });
+            })();
+        </script>
+    </section>
+
+    <!-- Location Section -->
+    <section id="locations" class="py-24 px-6 bg-k-wood-900 text-stone-50">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div
+                    class="h-[400px] rounded-lg overflow-hidden relative shadow-2xl shadow-black/20 group border border-stone-800 reveal-left">
+                    <!-- Map - Exact Address -->
+                    <iframe
+                        src="https://maps.google.com/maps?q=12A%20A%20l%C3%B4%20A10%2C%20Khu%20%C4%91%C3%B4%20th%E1%BB%8B%20Nam%20Trung%20Y%C3%AAn%2C%20C%E1%BA%A7u%20Gi%E1%BA%A5y%2C%20H%C3%A0%20N%E1%BB%99i&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                        width="100%" height="100%" style="border:0; filter: grayscale(1) contrast(1.2) opacity(0.8);"
+                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="absolute inset-0 bg-stone-900/10 pointer-events-none"></div>
+                </div>
+                <div class="space-y-6 reveal-right">
+                    <div class="flex items-center gap-3">
+                        <h3 class="font-serif text-3xl tracking-tight text-stone-100">Visit Us</h3>
+                    </div>
+                    <p class="text-stone-400 font-light leading-relaxed text-lg">
+                        Located in the Nam Trung Yen Urban Area, Cau Giay. A perfect spot for both
+                        business meetings and
+                        casual hangouts.
+                    </p>
+                    <div class="flex flex-col gap-4 text-sm text-stone-300 pt-4 border-t border-stone-800">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-map-pin w-4 h-4 text-k-red-900">
+                                <path
+                                    d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0">
+                                </path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>12A A lô A10, Khu đô thị Nam Trung Yên, Cầu Giấy, Hà Nội</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-phone w-4 h-4 text-k-red-900">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                </path>
+                            </svg>
+                            <span>0822 829 399</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-clock w-4 h-4 text-k-red-900">
+                                <path d="M12 6v6l4 2"></path>
+                                <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                            <span>Mon - Sun: 8:00 AM - 11:00 PM</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-4 mt-6">
+                        <a href="https://www.google.com/maps/place/K-Drama+coffe%26beer/@21.0194539,105.7849037,17z/data=!3m1!4b1!4m6!3m5!1s0x3135ab005c22f461:0x113c75d27db7e080!8m2!3d21.0194489!4d105.7874786!16s%2Fg%2F11x0tvjggr?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank"
+                            class="bg-k-red-900 text-white hover:bg-white hover:text-k-red-900 px-6 py-3 rounded-md text-sm transition-all w-full sm:w-auto font-medium shadow-md flex items-center justify-center">
+                            Get Directions
+                        </a>
+                        <a href="https://open.kakao.com/o/gXptQWZh" target="_blank"
+                            class="bg-[#FEE500] text-[#3A1D1D] hover:bg-[#ffe923] px-6 py-3 rounded-md text-sm transition-all w-full sm:w-auto font-medium shadow-md flex items-center justify-center gap-2">
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                <path
+                                    d="M12 3c-5.523 0-10 3.582-10 8c0 2.85 1.868 5.38 4.773 6.786-.245 1.764-1.071 4.542-1.229 5.253a.366.366 0 0 0 .546.381c.884-.556 5.86-3.882 6.877-4.59.349.034.703.053 1.063.053 5.52 0 10-2.6 10-7.882C24 6.6 19.52 3 12 3z" />
+                            </svg>
+                            Chat on KakaoTalk
+                        </a>
+                        <a href="https://zalo.me/84822829399" target="_blank"
+                            class="bg-[#0068FF] text-white hover:bg-[#0057d9] px-6 py-3 rounded-md text-sm transition-all w-full sm:w-auto font-medium shadow-md flex items-center justify-center gap-2">
+                            <span class="font-bold font-sans">Zalo</span>
+                            Chat on Zalo
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-k-wood-50 pt-12 pb-8 px-6 border-t border-stone-200">
+        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <a href="#" class="font-serif text-xl tracking-tight text-k-red-900 font-bold">
+                K-DRAMA
+            </a>
+            <div class="text-xs text-stone-400">
+                &copy; 2026 K-Drama Cafe & Beer Hanoi. All rights reserved.
+            </div>
+            <div class="flex gap-4">
+
+                <a href="https://www.facebook.com/people/k-drama/61573727188826/?mibextid=wwXIfr" target="_blank"
+                    class="text-stone-400 hover:text-k-red-900 transition-colors"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-facebook">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z">
+                        </path>
+                    </svg></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+
+        const revealOnScroll = () => {
+            revealElements.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (elementTop < windowHeight - revealPoint) {
+                    el.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        // Trigger once on load
+        revealOnScroll();
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileSideMenu = document.getElementById('mobile-side-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const menuLinks = mobileSideMenu.querySelectorAll('a');
+
+        function toggleMenu() {
+            mobileSideMenu.classList.toggle('translate-x-full');
+            mobileMenuOverlay.classList.toggle('opacity-0');
+            mobileMenuOverlay.classList.toggle('pointer-events-none');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
+        if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', toggleMenu);
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (!mobileSideMenu.classList.contains('translate-x-full')) {
+                    toggleMenu();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
